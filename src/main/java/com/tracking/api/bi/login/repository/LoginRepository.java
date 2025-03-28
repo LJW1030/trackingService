@@ -1,4 +1,4 @@
-package com.tracking.api.bi.user.repository;
+package com.tracking.api.bi.login.repository;
 
 import java.util.Optional;
 
@@ -10,12 +10,8 @@ import org.springframework.stereotype.Repository;
 import com.tracking.lib.domain.Users;
 
 @Repository
-public interface UserRepository extends JpaRepository<Users, Long> {
+public interface LoginRepository extends JpaRepository<Users, Long> {
 
-    // 사용자 ID로 조회
-    Optional<Users> findByUserId(String userId);
-    
-    // 이메일로 사용자 조회
-    Optional<Users> findByEmail(String email);
-    
+    @Query("SELECT u FROM Users u WHERE u.userId = :userId AND u.userPw = :userPw")
+    Optional<Users> findByUserIdAndPw(@Param("userId") String userId, @Param("userPw") String userPw);
 }
