@@ -3,6 +3,7 @@ package com.tracking.api.bi.login.dto;
 import java.io.Serializable;
 
 import com.tracking.lib.domain.Users;
+import com.tracking.lib.dto.user.UsersDto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
@@ -24,10 +25,16 @@ public interface LoginReqDto {
         @NotBlank(message = "password is not null")
         private String userPw;
 
-        public Users toSearchCondition() {
-            return Users.builder()
-                .userId(this.userId)
-                .userPw(this.userPw)
+        public UsersDto toUsers(Users user, String accessToken) {
+            return UsersDto.builder()
+            	.userNo(user.getUserNo())
+                .userId(user.getUserId())
+                .userPw(user.getUserPw())
+                .userName(user.getUserName())
+                .email(user.getEmail())
+                .phoneNumber(user.getPhoneNumber())
+                .authKey(user.getAuthKey())
+                .accessToken(accessToken)
                 .build();
 
         }
