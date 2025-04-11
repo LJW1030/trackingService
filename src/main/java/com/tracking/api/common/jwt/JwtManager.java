@@ -5,6 +5,7 @@ import java.security.Key;
 import java.security.SignatureException;
 import java.util.Date;
 
+import com.tracking.lib.exception.CommonRuntimeException;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -51,7 +52,7 @@ public class JwtManager {
                 .parseClaimsJws(token)
                 .getBody();
         }
-        catch (ExpiredJwtException | UnsupportedJwtException | MalformedJwtException | SignatureException | IllegalArgumentException e) {
+        catch (ExpiredJwtException | UnsupportedJwtException | MalformedJwtException | IllegalArgumentException e) {
             // e.printStackTrace();
             // throw new InvalidParameterException("유효하지 않은 토큰입니다");
             throw new CommonRuntimeException("E2000", "유효하지 않은 토큰입니다.");
@@ -79,7 +80,7 @@ public class JwtManager {
             // throw new CommonRuntimeException(CommonErrorCode.AUTHENTICATION_FAIL_05);
 
         }
-        catch (UnsupportedJwtException | MalformedJwtException | SignatureException | IllegalArgumentException e) {
+        catch (UnsupportedJwtException | MalformedJwtException | IllegalArgumentException e) {
             result = "Fail";
         }
 

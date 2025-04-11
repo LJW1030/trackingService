@@ -30,11 +30,9 @@ public class LoginServiceImpl implements LoginService {
     	
     	Optional<Users> userOptional = loginRepository.findByUserIdAndPw(req.getUserId(), req.getUserPw());
 
-    	Users user = userOptional.orElseThrow(() -> new RuntimeException("아이디 또는 비밀번호가 일치하지 않습니다."));
-    	
-    	if (StringUtils.hasText(user.getUserNo())) {
-
-            JwtManager jwtManager = new JwtManager(JwtProperty.SECRET, JwtProperty.ACCESS_EXPIRATION_TIME, JwtProperty.REFRESH_EXPIRATION_TIME);
+    	if (userOptional.isPresent()) {
+    		Users user = userOptional.get();
+    		JwtManager jwtManager = new JwtManager(JwtProperty.SECRET, JwtProperty.ACCESS_EXPIRATION_TIME, JwtProperty.REFRESH_EXPIRATION_TIME);
 
             String accessToken = jwtManager.generateAccessToken(user.getUserNo(), user.getAuthKey());
             
@@ -61,15 +59,13 @@ public class LoginServiceImpl implements LoginService {
             //result.setLoginLog(loginLogVo);
 
             result.setResult(true);
-
-        }
-        else {
-            result.setResultCode(ResultCodeConstants.RESULT_FAIL_CODE);
-            result.setResultMsg(ResultCodeConstants.RESULT_FAIL_MSG);
-            result.setResult(false);
-            result.setErrorCode(ResultCodeConstants.RESULT_LOGIN_EXCEPTION_CODE);
-            result.setErrorMsg(ResultCodeConstants.RESULT_LOGIN_EXCEPTION_MSG);
-        }
+    	} else {
+    		result.setResultCode(ResultCodeConstants.RESULT_FAIL_CODE);
+    		result.setResultMsg(ResultCodeConstants.RESULT_FAIL_MSG);
+    		result.setResult(false);
+    		result.setErrorCode(ResultCodeConstants.RESULT_LOGIN_EXCEPTION_CODE);
+    		result.setErrorMsg(ResultCodeConstants.RESULT_LOGIN_EXCEPTION_MSG);
+    	}
     	
         return result;
     }

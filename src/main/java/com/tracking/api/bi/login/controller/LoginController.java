@@ -17,12 +17,14 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @SecurityRequirement(name = HttpHeaders.AUTHORIZATION)
 @Tag(name = "로그인 API", description = "로그인 API")
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/v1")
+@Slf4j
 public class LoginController {
 
 	private final LoginService loginService;
@@ -35,9 +37,11 @@ public class LoginController {
     @Operation(summary = "로그인 처리", description = "로그인 처리를 실행한다.")
     @PostMapping("/proc-login")
     public ResponseEntity<ProcLoginRes> procLogin(@RequestBody @Validated ProcLoginReq req) {
-
+    	log.info("로그인 요청: {}", req);
         // 로그인 회원 정보 조회 값 담기
         ProcLoginRes result = loginService.login(req);
+
+        log.info("로그인 응답: {}", result);
 
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
